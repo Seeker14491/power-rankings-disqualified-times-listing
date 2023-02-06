@@ -4,6 +4,7 @@ import {
   Either,
   EitherAsync,
   GetType,
+  nullable,
   number,
   string,
 } from "purify-ts";
@@ -18,7 +19,7 @@ export const queryInspections = (): EitherAsync<unknown, Inspection[]> =>
     const rawInspections = await fromPromise(queryInspectionsRaw());
 
     return rawInspections.map((inspection) => {
-      const playerName = inspection.player.name ?? "[unknown]";
+      const playerName = inspection?.player?.name ?? "[unknown]";
       const parsedLeaderboard = parseLeaderboardName(
         inspection.leaderboard.name
       ).unsafeCoerce(); // FIXME
@@ -40,9 +41,11 @@ const RawInspection = Codec.interface({
     name: string,
   }),
   player_steam_id: string,
-  player: Codec.interface({
-    name: string,
-  }),
+  player: nullable(
+    Codec.interface({
+      name: string,
+    })
+  ),
   score: number,
   category: Codec.interface({
     name: string,

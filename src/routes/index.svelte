@@ -22,6 +22,7 @@
       x.caseOf({
         Left: () => {
           loadingState = "failed";
+          console.error(x);
           throw new Error("Error fetching inspections");
         },
         Right: (y) => {
